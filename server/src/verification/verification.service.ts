@@ -34,7 +34,7 @@ export class VerificationService {
       create: { email, code, expiresAt, attempts: 0 }
     })
 
-    await this.mail.sendMail({
+     this.mail.sendMail({
       to: email,
       subject: "Your Registration Verification Code",
       template: "Verification-code",
@@ -48,7 +48,6 @@ export class VerificationService {
 
     return {
       message: "Verification code sent to your email",
-      email
     };
   }
 
@@ -82,7 +81,7 @@ export class VerificationService {
       throw new BadRequestException("Invalid verification code");
     }
 
-    // Code is valid, delete it
+    // Code is valid, delete it`z
     await this.db.verificationCode.delete({
       where: { email }
     });
