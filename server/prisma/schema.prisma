@@ -1,0 +1,81 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+model User {
+id    String  @id @default(uuid())
+name String  
+email String   @unique
+password String  
+profileImagUrl String?
+verified     Boolean   @default(false)
+createAt DateTime @default(now())
+updatedAt DateTime @updatedAt
+assesment Assesment[]
+courses Course[]
+video  Video[]
+comments Comments[]
+}
+model Assesment{
+  id String @id
+  questions String[] 
+  userId    String
+  user      User  @relation(references: [id],fields: [userId])
+}
+model Video{
+  id String @id @default(uuid())
+  name String 
+  description String
+  duration   String 
+  courseId   String 
+  comment  Json?
+  userId String
+  user   User  @relation(fields: [userId],references: [id],onDelete: Cascade)
+  course   Course @relation(fields: [courseId],references: [id])
+  commment  Comments[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+}
+model Course{
+  id String @id @default(uuid())
+  userId String
+  user User @relation(references: [id],fields: [userId],onDelete: Cascade)
+  video Video[]
+  reviews Json?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+model VerificationCode{
+  id String @id @default(uuid())
+  email String @unique
+  code String 
+  expiresAt DateTime
+  attempts Int @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Comments{
+  id String  @id @default(uuid())
+  text String
+  userId String
+  videoId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user User @relation(fields: [userId],references: [id])
+  video Video @relation(fields: [videoId],references: [id],onDelete: Cascade)
+
+
+}
