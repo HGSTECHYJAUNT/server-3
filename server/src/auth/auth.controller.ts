@@ -22,7 +22,7 @@ export class AuthController {
     this.logger.debug("user created successfully")
     this.logger.debug("Verification service starting ...")
 
-    await this.verificationService.sendCode(email);
+     this.verificationService.sendCode(email);
     return {
       user
     }

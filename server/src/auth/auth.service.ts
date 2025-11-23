@@ -18,13 +18,16 @@ export class AuthService {
     private readonly configService:ConfigService
   ) {}
   async register(data: RegisterDto) {
+    if(!data){
+      throw new BadRequestException("request body cannot be empty")
+    }
     try {
       const { name, password, email } = data;
       const existingUser = await this.db.user.findFirst({where:{email}});
       if (existingUser) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
       const hashed_password = await bcrypt.hash(password, 20);
       this.logger.debug("User creation creation started")
-      const user = await  this.db.user.create({
+      const user = await this.db.user.create({
         data:{
           name,email,password:hashed_password
         }
