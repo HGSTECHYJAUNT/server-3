@@ -18,9 +18,7 @@ export class AuthService {
     private readonly configService:ConfigService
   ) {}
   async register(data: RegisterDto) {
-    if(!data){
-      throw new BadRequestException("request body cannot be empty")
-    }
+   
     try {
       const { name, password, email } = data;
       const existingUser = await this.db.user.findFirst({where:{email}});
