@@ -10,6 +10,8 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
  import { PrismaService } from './prisma/prisma.service';
 import { VerificationService } from './verification/verification.service';
 import { VerificationModule } from './verification/verification.module';
+import { CoursesModule } from './courses/courses.module';
+import { VideoModule } from './video/video.module';
 
 @Module({
   imports: [
@@ -85,6 +87,8 @@ JwtModule.registerAsync({
     // Your modules
     AuthModule,
     VerificationModule,
+    CoursesModule,
+    VideoModule,
   ],
   providers: [PrismaService, VerificationService],
 })

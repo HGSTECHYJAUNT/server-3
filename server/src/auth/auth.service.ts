@@ -21,9 +21,11 @@ export class AuthService {
    
     try {
       const { name, password, email } = data;
-      const existingUser = await this.db.user.findFirst({where:{email}});
-      if (existingUser) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-      const hashed_password = await bcrypt.hash(password, 20);
+      const existingUser = await this.db.user.findUnique({where:{email}});
+      if (existingUser){
+          throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+      } 
+      const hashed_password = await bcrypt.hash(password, 10);
       this.logger.debug("User creation creation started")
       const user = await this.db.user.create({
         data:{
@@ -61,7 +63,7 @@ export class AuthService {
   }
   async login(data:LoginDto){
     const {email,password} = data
-    const user  = await this.db.user.findFirst({
+    const user  = await this.db.user.findUnique({
       where:{email}
     })
     if (!user) {
@@ -82,6 +84,7 @@ export class AuthService {
     return {
       access_token,
       refresh_token,
+      id:user.id,
      message:"User Logged in successfully"
     }
   }

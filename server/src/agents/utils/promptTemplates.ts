@@ -15,3 +15,4 @@ Rules:
 - Base readinessScore on likely time & effort required and inferred skills.
 Return ONLY valid JSON (no extra commentary).
 `;
+
