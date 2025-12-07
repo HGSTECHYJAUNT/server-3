@@ -1,5 +1,4 @@
 import { IsArray, IsOptional, IsString } from 'class-validator';
-import { IVideo } from '../interface/create.interface';
 import {PartialType} from "@nestjs/mapped-types"
 
 export class CourseCreateDto {
