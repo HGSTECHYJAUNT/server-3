@@ -6,78 +6,83 @@
 
 generator client {
   provider = "prisma-client-js"
-
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = env("DIRECT_URL")
 }
+
 model User {
-id    String  @id @default(uuid())
-name String  
-email String   @unique
-password String  
-profileImagUrl String?
-verified     Boolean   @default(false)
-createAt DateTime @default(now())
-updatedAt DateTime @updatedAt
-assesment Assesment[]
-courses Course[]
-video  Video[]
-comments Comments[]
+  id             String      @id @default(uuid())
+  name           String
+  email          String      @unique
+  password       String
+  profileImagUrl String?
+  verified       Boolean     @default(false)
+  createAt       DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  assesment      Assesment[]
+  courses        Course[]
+  video          Video[]
+  comments       Comments[]
 }
-model Assesment{
-  id String @id
-  questions String[] 
+
+model Assesment {
+  id        String   @id
+  questions String[]
   userId    String
-  user      User  @relation(references: [id],fields: [userId])
+  user      User     @relation(references: [id], fields: [userId])
 }
-model Video{
-  id String @id @default(uuid())
-  name String 
-  video String 
-  description String
-  duration   String
-  courseId   String?
-  userId String
-  user   User  @relation(fields: [userId],references: [id],onDelete: Cascade)
-  course   Course? @relation(fields: [courseId],references: [id])
-  comment  Comments[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 
+model Video {
+  id           String     @id @default(uuid())
+  name         String
+  video        String
+  description  String
+  duration     String
+  courseId     String?
+  thumbnailUrl String?    @db.VarChar(500)
+  userId       String
+  author       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course       Course?    @relation(fields: [courseId], references: [id])
+  comment      Comments[]
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
 }
-model Course{
-  id String @id @default(uuid())
-  name String 
-  author String 
-  userId String 
-  user User @relation(references: [id],fields: [userId],onDelete: Cascade)
-  video Video[]
-  reviews Json?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+
+model Course {
+  id           String   @id @default(uuid())
+  name         String
+  author       String
+  userId       String
+  isPublished  Boolean  @default(false)
+  user         User     @relation(references: [id], fields: [userId], onDelete: Cascade)
+  slug         String?  @unique
+  thumbnailUrl String?  @db.VarChar(500)
+  video        Video[]
+  reviews      Json?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
-model VerificationCode{
-  id String @id @default(uuid())
-  email String @unique
-  code String 
+
+model VerificationCode {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  code      String
   expiresAt DateTime
-  attempts Int @default(0)
+  attempts  Int      @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-model Comments{
-  id String  @id @default(uuid())
-  text String
-  userId String
-  videoId  String
+model Comments {
+  id        String   @id @default(uuid())
+  text      String
+  userId    String
+  videoId   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  user User @relation(fields: [userId],references: [id])
-  video Video @relation(fields: [videoId],references: [id],onDelete: Cascade)
-
-
+  user      User     @relation(fields: [userId], references: [id])
+  video     Video    @relation(fields: [videoId], references: [id], onDelete: Cascade)
 }
